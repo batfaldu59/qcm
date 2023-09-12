@@ -1,28 +1,52 @@
 
-def poser_question(question, choix1, choix2, choix3, choix4, reponse_question):
-    global score
-    global nb_question
-    nb_question += 1
-    print(question)
-    print(f"(a) {choix1}")
-    print(f"(b) {choix2}")
-    print(f"(c) {choix3}")
-    print(f"(d) {choix4}")
+def demander_reponse(min, max):
+    reponse_str = input(f"Votre réponse (entre {min} et {max}): ")
+    try:
+        reponse_int = int(reponse_str)
+        if min <= reponse_int <= max:
+            return reponse_int
+        print(f"ERREUR: vous devez renseigner un chiffre entre {min} et {max}!")
+    except:
+        print("ERREUR: veuillez renseigner uniquement des chiffres!")
+    return demander_reponse(min, max)
+
+
+def poser_question(question):
+    choix = question[1]
+    taille_choix_reponse = len(choix)
+
+    print(question[0])
+    for i in range(taille_choix_reponse):
+        print(f"{i+1} {choix[i]}")
+
     print("---------------")
-    reponse = input("Votre choix: ")
-    if reponse == reponse_question:
+    reponse_correct = False
+    reponse_int = demander_reponse(1, len(choix))
+    if choix[reponse_int-1] == question[2]:
         print("Bonne réponse")
-        score += 1
+        reponse_correct = True
     else:
         print("Mauvaise réponse")
     print()
+    return reponse_correct
 
 
-score = 0
-nb_question = 0
+def lancer_questionnaire(questions):
+    score = 0
+    for question in questions:
+        if poser_question(question):
+            score+=1
+    print(f"Votre score est de {score}/{len(questionnaire)}")
+
+#   ----------------------------------------------------------
+
+
+questionnaire = (
+    ("Quelle est la capitale de la France ? ", ("Paris", "Lyon", "Bordeaux", "Lille"), "Paris"),
+    ("Quelle est la capitale de l'Italie ? ", ("Venise", "Londres", "Rome", "Turin"), "Rome"),
+    ("Quelle est la capitale de l'Espagne ? ", ("Porto", "Madrid", "Talinn", "Berlin"), "Madrid"),
+    ("Quelle est la capitale de l'Allemagne ? ", ("Berlin", "Madrid", "Copenhague", "Amsterdam"), "Berlin")
+)
+
 print("-----QCM-----")
-poser_question("Quelle est la capitale de la France ? ", "Paris", "Lyon", "Bordeaux", "Lille", "a")
-poser_question("Quelle est la capitale de l'Italie ? ", "Venise", "Londres", "Rome", "Moscou", "c")
-poser_question("Quelle est la capitale de la Belgique ? ", "Amsterdam", "Bruxelles", "Bordeaux", "Talinn", "b")
-poser_question("Quelle est la capitale de l'Espagne ? ", "Paris", "Zurich", "Brugges", "Madrid", "d")
-print(f"Votre score est de {score}/{nb_question}")
+lancer_questionnaire(questionnaire)
